@@ -1,6 +1,12 @@
 <h1>Hello Kendo UI for Angular!</h1>
 
-<kendo-grid [data]="gridItems | async"
+<hr>
+<kendo-dropdownlist [data]="dropDwonItems" [defaultItem]="defaultItem" textField="text" valueField="value"
+  (valueChange)="handleFilterChange($event)" [style.width.px]="170">
+</kendo-dropdownlist>
+
+<kendo-grid
+  [data]="(gridItems | async)!"
   [pageSize]="pageSize"
   [skip]="skip"
   [pageable]="true"
@@ -9,9 +15,11 @@
   [sort]="sortDescriptor"
   (sortChange)="handleSortChange($event)"
   [height]="400">
-  <kendo-grid-column field="ProductID" title="ID"></kendo-grid-column>
-  <kendo-grid-column field="UnitPrice" title="Unit Price" format="{0:c}"></kendo-grid-column>
-  <kendo-grid-column field="Discontinued" filter="boolean">
+  <kendo-grid-column field="ProductID" title="ID" [width]="50"> </kendo-grid-column>
+  <kendo-grid-column field="ProductName" title="Product Name" [width]="140" > </kendo-grid-column>
+  <kendo-grid-column field="Category.CategoryName" title="Category" [width]="140" > </kendo-grid-column>
+  <kendo-grid-column field="UnitPrice" title="Unit Price" [width]="140" format="{0:c}"> </kendo-grid-column>
+  <kendo-grid-column field="Discontinued" [width]="140" filter="boolean">
     <ng-template kendoGridCellTemplate let-dataItem>
       <input type="checkbox" [checked]="dataItem.Discontinued" disabled />
     </ng-template>

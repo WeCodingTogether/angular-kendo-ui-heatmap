@@ -3,6 +3,7 @@ import { ProductService } from './product.service';
 import { Observable } from 'rxjs';
 import { GridDataResult, PageChangeEvent } from '@progress/kendo-angular-grid';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { categories } from './data.categories';
 
 @Component({
   selector: 'app-root',
@@ -13,14 +14,18 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 export class AppComponent {
   title = 'kendo-heatmap-demo';
 
-  public gridItems: Observable<GridDataResult>;
+  // used for the Grid
+  public gridItems!: Observable<GridDataResult>;
   public pageSize: number = 10;
   public skip: number = 0;
   public sortDescriptor: SortDescriptor[] = [];
   public filterTerm: number | null = null;
 
+  // used for the DropDownList
+  public dropDwonItems = categories;
+  public defaultItem = { text: "Filter by Category", value: null };  // grid的default显示这个text， 表格的内容显示所有products，没有fileter
+
   constructor(private service: ProductService) {
-    this.gridItems = new Observable<GridDataResult>();
   }
 
   public pageChange(event: PageChangeEvent): void {
@@ -35,6 +40,12 @@ export class AppComponent {
 
   private loadGridItems(): void {
     this.gridItems = this.service.getProducts(this.skip, this.pageSize, this.sortDescriptor, this.filterTerm);
+  }
+
+  public handleFilterChange(item: { text: string; value: number | null }): void {
+    this.filterTerm = item.value;  // update filterTerm here then after click one category the whole Grid data will change 改变filterTerm来筛选显示原grid的数据
+    this.skip = 0;
+    this.loadGridItems();
   }
 
 }
